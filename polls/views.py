@@ -8,6 +8,8 @@ from .models import Choice, Question
 
 from polls.serializers import QuestionSerializer
 from rest_framework import viewsets
+from rest_framework.parsers import JSONParser
+from rest_framework.permissions import IsAuthenticated
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
@@ -37,6 +39,7 @@ class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
 
+
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     try:
@@ -59,3 +62,5 @@ def vote(request, question_id):
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    permission_classes = (IsAuthenticated,)
+    parser_classes = (JSONParser,)
